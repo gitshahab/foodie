@@ -3,8 +3,23 @@ import Image from 'next/image';
 import classes from './page.module.css'
 import { notFound } from 'next/navigation';
 
-const MealDetails = ({params}) => {
-    const meal = getMeal(params.mealsSlug);
+export async function generateMetadata({ params }){
+    const {mealsSlug} = await params;
+    const meal = await getMeal(mealsSlug);
+
+    if(!meal) {
+        notFound();
+    }
+    
+    return {
+        title: meal.title,
+        description: meal.summary
+    }
+}
+
+const MealDetails = async ({params}) => {
+    const {mealsSlug} = await params;
+    const meal = await getMeal(mealsSlug);
 
     if(!meal) {
         notFound();
